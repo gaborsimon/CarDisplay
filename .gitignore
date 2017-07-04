@@ -1,0 +1,14 @@
+# Generated files
+*.elf
+*.lst
+*.map
+
+# Upload files
+*.eep
+*.hex
+
+# Object files
+*.o
+
+# Temprary file of GVim editor
+*.swp
