@@ -10,7 +10,7 @@
 #include "LCDCharacters_HD44780.h"
 #include "LCDDriver_HD44780.h"
 #include "MicroControllerHAL.h"
-#include "RealTimeClock.h"
+//#include "RealTimeClock.h"
 //#include "Sensor_GPS.h"
 //#include "Sensor_DHT22.h"
 

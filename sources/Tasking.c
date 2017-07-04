@@ -26,13 +26,13 @@ static volatile G_Flag_e L_Task1SEC = Flag_CLEAR;
 //******************************************************************************
 //****** INTERRUPT HANDLER
 //******************************************************************************
-/*
-ISR(TIMER2_OVF_vect)
+
+ISR(TIMER1_COMPA_vect)
 {
     L_Task1SEC = Flag_SET;
 }
 
-
+/*
 ISR(USART_RXC_vect)
 {
     GPS_Callback_USART_RXC();
@@ -47,7 +47,7 @@ void Task_Init(void)
     MCH__INTERRUPT_DISABLED();
 
     MCH_InitPins();
-//    MCH_InitTimer0();
+    MCH_InitTimer1();
 //    MCH_InitTimer2();
     MCH_InitADC(); 
 //    MCH_InitUSART(L__USART_BAUD_RATE);
@@ -61,7 +61,7 @@ void Task_Init(void)
 
 //    RTC_SetDate(2000u,1u,1u,1u,Flag_CLEAR,0u,0u,0u);
 
-//    MCH__INTERRUPT_ENABLED();
+    MCH__INTERRUPT_ENABLED();
 }
 
 
@@ -75,21 +75,24 @@ void Task_Main(void)
 
     for (;;)
     {
-        LCD_Clear();
-        bv_raw = MCH_ReadADC(MCH__ADC_CHANNEL_0);
+        if (Flag_SET == L_Task1SEC)
+        {
+            L_Task1SEC = Flag_CLEAR;
 
-        bv = bv_raw * (5.0f / 1024.0f);
-        bv = bv / (100.0f / (100.0f + 330.0f));
+            LCD_Clear();
+            bv_raw = MCH_ReadADC(MCH__ADC_CHANNEL_0);
 
-        LCD_SetCursor(1,3);
-        LCD_WriteInt((uint16) (bv));
-        LCD_WriteChar('.');
-        LCD_WriteInt((uint16) ((bv - (uint16)bv) * 10.0f));
-        LCD_WriteChar('V');
-        LCD_SetCursor(2,1);
-        LCD_WriteInt(bv_raw);
-        _delay_ms(1000);
-
+            bv = bv_raw * (5.0f / 1024.0f);
+            bv = bv / (100.0f / (100.0f + 330.0f));
+            
+            LCD_SetCursor(1,3);
+            LCD_WriteInt((uint16) (bv));
+            LCD_WriteChar('.');
+            LCD_WriteInt((uint16) ((bv - (uint16)bv) * 10.0f));
+            LCD_WriteChar('V');
+            LCD_SetCursor(2,1);
+            LCD_WriteInt(bv_raw);
+        }
 
     } // main end-less loop
 

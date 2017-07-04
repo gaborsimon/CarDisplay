@@ -180,13 +180,12 @@ void MCH_InitTimer0(void)
  * Name: MCH_InitTimer1
  *
  * Description: This function initializes the Timer1 peripheral
- *              for receiving the signal of DCF77.
+ *              to generate the main tasking periode time of 1 second.
  *
  * Input: None
  *
  * Output: None
  */
-/*
 void MCH_InitTimer1(void)
 {
     // Reset control registers
@@ -205,34 +204,34 @@ void MCH_InitTimer1(void)
     U__BIT_CLR(TCCR1A, WGM11);
     U__BIT_CLR(TCCR1A, WGM10);
     
-    // Input Capture Noise Canceler: Enabled
-    U__BIT_SET(TCCR1B, ICNC1);
+    // Input Capture Noise Canceler: Disabled
+    U__BIT_CLR(TCCR1B, ICNC1);
     
     // Input Capture Edge Select: Falling (negative) edge
     U__BIT_CLR(TCCR1B, ICES1);
     
-    // Clock Select: CLK / 256 = 31.250kHz = 32us
+    // Clock Select: CLK / 256 = 46.875kHz = 21.33us
     U__BIT_SET(TCCR1B, CS12);
     U__BIT_CLR(TCCR1B, CS11);
     U__BIT_CLR(TCCR1B, CS10);
     
     // Reset Timer Register
     TCNT1 = 0u;
-    // Set Output Compare Register for Channel A to 1500ms to catch DCF77 Minute Mark
+    // Set Output Compare Register for Channel A to 1sec
     OCR1A = 46875u;
     // Reset Output Compare Register for Channel B
     OCR1B = 0u;
 
     // Timer Input Capture Interrupt: Disabled
-    U__BIT_CLR(TIMSK, TICIE1);
-    // Output Compare A Match Interrupt: Disabled
-    U__BIT_CLR(TIMSK, OCIE1A);
+    U__BIT_CLR(TIMSK1, ICIE1);
+    // Output Compare A Match Interrupt: Enabled
+    U__BIT_SET(TIMSK1, OCIE1A);
     // Output Compare B Match Interrupt: Disabled
-    U__BIT_CLR(TIMSK, OCIE1B);
+    U__BIT_CLR(TIMSK1, OCIE1B);
     // Timer Overflow Interrupt: Disabled
-    U__BIT_CLR(TIMSK, TOIE1);
+    U__BIT_CLR(TIMSK1, TOIE1);
 }
-*/
+
 
 /*
  * Name: MCH_InitTimer2
