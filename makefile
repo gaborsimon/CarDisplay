@@ -14,7 +14,7 @@
 PROJECT = CarDisplay
 
 # Controller type
-MCU = a328p
+MCU = atmega328p
 
 # Optimization level
 OPT_LEVEL  = -Os
