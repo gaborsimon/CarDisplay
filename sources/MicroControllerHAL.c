@@ -50,10 +50,8 @@ void MCH_InitPins(void)
 //    MCH__GPIO_WRITE      (MCH__PORT_GPS_CTRL,     MCH__P_GPS_CTRL,     U__HIGH);
 
     /* DHT22 */
-//    MCH__GPIO_DIRECTION  (MCH__DDR_DHT22,         MCH__P_DHT22_DATA,   U__OUTPUT);
-//    MCH__GPIO_DIRECTION  (MCH__DDR_DHT22_CTRL,    MCH__P_DHT22_CTRL,   U__OUTPUT);
-//    MCH__GPIO_WRITE      (MCH__PORT_DHT22,        MCH__P_DHT22_DATA,   U__HIGH);
-//    MCH__GPIO_WRITE      (MCH__PORT_DHT22_CTRL,   MCH__P_DHT22_CTRL,   U__HIGH);
+    MCH__GPIO_DIRECTION  (MCH__DDR_DHT22,         MCH__P_DHT22_DATA,   U__OUTPUT);
+    MCH__GPIO_WRITE      (MCH__PORT_DHT22,        MCH__P_DHT22_DATA,   U__HIGH);
 
     /* LCD DISPLAY */
     MCH__GPIO_DIRECTION  (MCH__DDR_LCD,           MCH__P_LCD_RS,       U__OUTPUT);
@@ -218,7 +216,7 @@ void MCH_InitTimer1(void)
     // Reset Timer Register
     TCNT1 = 0u;
     // Set Output Compare Register for Channel A to 1sec
-    OCR1A = 46875u;
+    OCR1A = 62500u;
     // Reset Output Compare Register for Channel B
     OCR1B = 0u;
 

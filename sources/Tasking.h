@@ -12,7 +12,7 @@
 #include "MicroControllerHAL.h"
 //#include "RealTimeClock.h"
 //#include "Sensor_GPS.h"
-//#include "Sensor_DHT22.h"
+#include "Sensor_DHT22.h"
 
 
 //====== Public Constants ======================================================

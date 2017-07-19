@@ -13,7 +13,7 @@
 /******************************************************************************/
 /****** PROCESSOR CONFIGURATION */
 /******************************************************************************/
-#define F_CPU (12000000UL)
+#define F_CPU (16000000UL)
 
 /******************************************************************************/
 /****** PIN CONFIGURATION */
@@ -38,10 +38,10 @@
 #define MCH__PORT_LCD           (PORTD)
 
 /* DHT22 */
-#define MCH__P_DHT22_DATA       (PD4)   /* PIN 002 */
-#define MCH__DDR_DHT22          (DDRD)
-#define MCH__PIN_DHT22          (PIND)
-#define MCH__PORT_DHT22         (PORTD)
+#define MCH__P_DHT22_DATA       (PB0)   /* PIN 012 */
+#define MCH__DDR_DHT22          (DDRB)
+#define MCH__PIN_DHT22          (PINB)
+#define MCH__PORT_DHT22         (PORTB)
 
 /* Battery Voltage Measurement */
 #define MCH__P_BVM              (PC0)   /* PIN 023 */
