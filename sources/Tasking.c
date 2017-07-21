@@ -65,8 +65,12 @@ void Task_Main(void)
             L_Task1SEC = Flag_CLEAR;
 
             LCM_Refresh(LCM__BATTERY);
+            
             DHT22_Refresh();
-            LCM_Refresh(LCM__DHT22);
+            if (Flag_SET == XDHT22__DATA_UPDATED)
+            {
+                LCM_Refresh(LCM__DHT22);
+            }
 
         } // Task_1SEC
     } // main end-less loop
