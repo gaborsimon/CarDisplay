@@ -18,13 +18,6 @@
 /******************************************************************************/
 /****** PIN CONFIGURATION */
 /******************************************************************************/
-//TODO: Verify the pin configuration
-/* GPS module */
-
-#define MCH__P_GPS_DATA         (PD0)   /* PIN 030 */
-#define MCH__DDR_GPS            (DDRD)
-#define MCH__PIN_GPS            (PIND)
-
 /* LCD panel */
 #define MCH__P_LCD_RS           (PD1)   /* PIN 031 */
 #define MCH__P_LCD_RW           (PD2)   /* PIN 032 */
@@ -67,15 +60,6 @@
 #define MCH__ADC_CHANNEL_6       (6u)
 #define MCH__ADC_CHANNEL_7       (7u)
 
-/* I2C */
-#define MCH__I2C_START_READ      (1u)
-#define MCH__I2C_START_WRITE     (0u)
-#define MCH__I2C_READ_PENDING    (1u)
-#define MCH__I2C_READ_STOP       (2u)
-#define MCH__I2C_NO_ERROR        (1u)
-#define MCH__I2C_ERROR           (2u)
-
-
 /******************************************************************************/
 /****** ASSEMBLY INSTRUCTIONS */
 /******************************************************************************/
@@ -96,17 +80,10 @@ extern "C" {
     extern void  MCH_InitPins(void);
     extern void  MCH_InitWatchdog(void);
     extern void  MCH_InitSleepMode(void);
-    extern void  MCH_InitTimer0(void);
     extern void  MCH_InitTimer1(void);
-    extern void  MCH_InitTimer2(void);
     extern void  MCH_InitADC(void);
-    extern uint16 MCH_ReadADC(uint8 _Channel);
-    extern void  MCH_InitUSART(uint32 _Baud);
-    extern void  MCH_InitI2C(uint16 _SCLFreqKHZ);
-    extern uint8 MCH_I2CStart(uint8 _Address, uint8 _ReadWrite);
-    extern uint8 MCH_I2CWrite(uint8 _Data);
-    extern void  MCH_I2CRead(uint8 *_Data, uint8 _ReadStatus);
-    extern void  MCH_I2CStop(void);
+    extern uint16  MCH_ReadADC(uint8 _Channel);
+    extern float32 MCH_ReadBatteryVoltage(void);
 
 #ifdef __cplusplus
 } // extern "C"

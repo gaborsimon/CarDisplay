@@ -4,7 +4,7 @@
 
 //====== Private Constants =====================================================
 // Read sensor in every N second
-#define L__DHT22_READ_PERIOD_SEC     (10u)
+#define L__DHT22_READ_PERIOD_SEC     (5u)
 
 #define L__DHT22_BIT_TIME_THRESHOLD  (25u)
 #define L__DHT22_DATA_BIT_COUNT      (40u)
@@ -224,12 +224,8 @@ void DHT22_Refresh(void)
 
     L_TickCounter++;
     
-    // Turn on the sensor, measurement needs 2-3 seconds
-    if ((L__DHT22_READ_PERIOD_SEC - 3u) == L_TickCounter)
-    {
-    }
     // Read out the conversion data
-    else if (L__DHT22_READ_PERIOD_SEC == L_TickCounter)
+    if (L__DHT22_READ_PERIOD_SEC == L_TickCounter)
     {
         L_TickCounter = U__INIT_VALUE_UINT;
         
