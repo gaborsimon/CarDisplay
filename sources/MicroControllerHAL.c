@@ -6,11 +6,11 @@
 #define L__ADC_REF_VOLT             (5.0f)
 #define L__ADC_RESOLUTION_BIT    (1024.0f)
 #define L__ADC_OFFSET_VOLT          (0.1f)
-#define L__ADC_BATTERY_R1_OHM   (33000.0f)
-#define L__ADC_BATTERY_R2_OHM   (10000.0f)
+#define L__ADC_BATTERY_R1_KOHM       (33u)
+#define L__ADC_BATTERY_R2_KOHM       (10u)
 
 #define L__ADC_LSB_TO_VOLT      (L__ADC_REF_VOLT / L__ADC_RESOLUTION_BIT)
-#define L__ADC_VOLT_TO_BATTERY  (L__ADC_BATTERY_R2_OHM / (L__ADC_BATTERY_R1_OHM + L__ADC_BATTERY_R2_OHM))
+#define L__ADC_VOLT_TO_BATTERY  (L__ADC_BATTERY_R2_KOHM * 1000.0f / (L__ADC_BATTERY_R1_KOHM * 1000.0f + L__ADC_BATTERY_R2_KOHM * 1000.0f))
 
 
 //====== Private Signals =======================================================
@@ -38,10 +38,6 @@
  */
 void MCH_InitPins(void)
 {
-    /* DHT22 */
-    MCH__GPIO_DIRECTION  (MCH__DDR_DHT22,   MCH__P_DHT22_DATA,  U__OUTPUT);
-    MCH__GPIO_WRITE      (MCH__PORT_DHT22,  MCH__P_DHT22_DATA,  U__HIGH);
-
     /* LCD DISPLAY */
     MCH__GPIO_DIRECTION  (MCH__DDR_LCD,     MCH__P_LCD_RS,      U__OUTPUT);
     MCH__GPIO_DIRECTION  (MCH__DDR_LCD,     MCH__P_LCD_RW,      U__OUTPUT);
@@ -50,6 +46,10 @@ void MCH_InitPins(void)
     MCH__GPIO_DIRECTION  (MCH__DDR_LCD,     MCH__P_LCD_D5,      U__OUTPUT);
     MCH__GPIO_DIRECTION  (MCH__DDR_LCD,     MCH__P_LCD_D6,      U__OUTPUT);
     MCH__GPIO_DIRECTION  (MCH__DDR_LCD,     MCH__P_LCD_D7,      U__OUTPUT);
+
+    /* DHT22 */
+    MCH__GPIO_DIRECTION  (MCH__DDR_DHT22,   MCH__P_DHT22_DATA,  U__OUTPUT);
+    MCH__GPIO_WRITE      (MCH__PORT_DHT22,  MCH__P_DHT22_DATA,  U__HIGH);
 
     /* Battery Voltage Measurement */
     MCH__GPIO_DIRECTION  (MCH__DDR_BVM,     MCH__P_BVM,         U__INPUT);
@@ -60,6 +60,8 @@ void MCH_InitPins(void)
  * Name: MCH_InitWatchdog
  *
  * Description: This function initializes the Watchdog timer.
+ *              The ATmega328P needs to be set the WD registers at once therefore
+ *              the util bit set/clear macros cannot be used.
  *
  * Input: None
  *
@@ -72,7 +74,7 @@ void MCH_InitWatchdog(void)
     /* Start timed sequence */
     WDTCSR |= (1<<WDCE) | (1<<WDE);
     
-    // Watchdog Timeout by setting Number of WDT Oscillator (Cycles) to 512K (524288 cycles) = 4sec
+    // Watchdog Timeout by setting number of WDT Oscillator (128kHz) cycles to 512K (524288 cycles) = 4sec
     WDTCSR = (1<<WDE) | (1<<WDP3) | (0<<WDP2) | (0<<WDP1) | (0<<WDP0);
 }
 
@@ -81,26 +83,35 @@ void MCH_InitWatchdog(void)
  * Name: MCH_InitSleepMode
  *
  * Description: This function initializes and enables the desired Sleep Mode of the device.
- *              In our application the "Power-save" mode shall be used because the main
- *              scheduler is clocked from the external watch-clock driven asynchronous
- *              Timer2.
+ *              In our application the "IDLE" mode shall be used because the main
+ *              scheduler is clocked from the Timer1 module.
+ *              The not used peripheral clocks are also disabled.
  *
  * Input: None
  *
  * Output: None
  */
-/*
 void MCH_InitSleepMode(void)
 {
-    // Setting the "Power-save" mode in sleep mode
-    U__BIT_CLR(MCUCR,SM2);
-    U__BIT_SET(MCUCR,SM1);
-    U__BIT_SET(MCUCR,SM0);
-    
+    // Setting the "IDLE" mode in sleep mode
+    U__BIT_CLR(SMCR,SM2);
+    U__BIT_CLR(SMCR,SM1);
+    U__BIT_CLR(SMCR,SM0);
+
+    // Disable the BOD in sleep mode
+    U__BIT_SET(MCUCR, BODSE);
+    U__BIT_SET(MCUCR, BODS);
+
+    // Switch off the not used peripheral clocks for power reduction
+    U__BIT_SET(PRR, PRTWI);
+    U__BIT_SET(PRR, PRTIM0);
+    U__BIT_SET(PRR, PRTIM2);
+    U__BIT_SET(PRR, PRSPI);
+    U__BIT_SET(PRR, PRUSART0);
+
     // Enable the sleep mode
-    U__BIT_SET(MCUCR,SE);
+    U__BIT_SET(SMCR,SE);
 }
-*/
 
 
 /*

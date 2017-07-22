@@ -77,13 +77,13 @@
 extern "C" {
 #endif
 
-    extern void  MCH_InitPins(void);
-    extern void  MCH_InitWatchdog(void);
-    extern void  MCH_InitSleepMode(void);
-    extern void  MCH_InitTimer1(void);
-    extern void  MCH_InitADC(void);
-    extern uint16  MCH_ReadADC(uint8 _Channel);
-    extern float32 MCH_ReadBatteryVoltage(void);
+    extern void     MCH_InitPins(void);
+    extern void     MCH_InitWatchdog(void);
+    extern void     MCH_InitSleepMode(void);
+    extern void     MCH_InitTimer1(void);
+    extern void     MCH_InitADC(void);
+    extern uint16   MCH_ReadADC(uint8 _Channel);
+    extern float32  MCH_ReadBatteryVoltage(void);
 
 #ifdef __cplusplus
 } // extern "C"

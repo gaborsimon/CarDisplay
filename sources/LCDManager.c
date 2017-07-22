@@ -3,23 +3,23 @@
 
 
 //====== Private Constants =====================================================
-#define L__WELCOME_TIMEOUT_MS     (3 * 1000u)
-#define L__WELCOME_MESSAGE_ROW_1  ("   CarDisplay   ")  
-#define L__WELCOME_MESSAGE_ROW_2  ("      v1.0      ")  
+#define L__WELCOME_TIMEOUT_MS       (3 * 1000u)
+#define L__WELCOME_MESSAGE_ROW_1    ("   CarDisplay   ")  
+#define L__WELCOME_MESSAGE_ROW_2    ("      v1.0      ")  
 
-#define L__POS_ROW_WELCOME               (1u)
-#define L__POS_COL_WELCOME               (1u)
+#define L__POS_ROW_WELCOME          (1u)
+#define L__POS_COL_WELCOME          (1u)
 
-#define L__POS_ROW_BATT_LEVEL            (1u)
-#define L__POS_COL_BATT_LEVEL            (1u)
+#define L__POS_ROW_BATT_LEVEL       (1u)
+#define L__POS_COL_BATT_LEVEL       (1u)
 
-#define L__POS_ROW_BATT_STATUS           (2u)
-#define L__POS_COL_BATT_STATUS           (1u)
+#define L__POS_ROW_BATT_STATUS      (2u)
+#define L__POS_COL_BATT_STATUS      (1u)
 
-#define L__POS_ROW_DHT22_TEMP            (1u)
-#define L__POS_COL_DHT22_TEMP           (11u)
-#define L__POS_ROW_DHT22_HUM             (2u)
-#define L__POS_COL_DHT22_HUM            (13u)
+#define L__POS_ROW_DHT22_TEMP       (1u)
+#define L__POS_COL_DHT22_TEMP      (11u)
+#define L__POS_ROW_DHT22_HUM        (2u)
+#define L__POS_COL_DHT22_HUM       (13u)
 
 #define L__CUSTOM_CHAR_POS_BATT_TOP             (1u)
 #define L__CUSTOM_CHAR_POS_BATT_MIDDLE_0        (2u)
@@ -29,12 +29,12 @@
 #define L__CUSTOM_CHAR_POS_BATT_BOTTOM_0        (6u)
 #define L__CUSTOM_CHAR_POS_BATT_BOTTOM_CH_INV   (7u)
 
-#define L__BATTERY_LEVEL_OVERCHARGE     (14.7f)
-#define L__BATTERY_LEVEL_CHARGE         (13.7f)
-#define L__BATTERY_LEVEL_100            (12.6f)
-#define L__BATTERY_LEVEL_75             (12.4f)
-#define L__BATTERY_LEVEL_50             (12.2f)
-#define L__BATTERY_LEVEL_25             (12.0f)
+#define L__BATTERY_LEVEL_OVERCHARGE (14.7f)
+#define L__BATTERY_LEVEL_CHARGE     (13.7f)
+#define L__BATTERY_LEVEL_100        (12.6f)
+#define L__BATTERY_LEVEL_75         (12.4f)
+#define L__BATTERY_LEVEL_50         (12.2f)
+#define L__BATTERY_LEVEL_25         (12.0f)
 
 
 //====== Private Signals =======================================================
@@ -47,7 +47,16 @@ void L_RefreshDHT22(void);
 
 
 //====== Private Functions =====================================================
-//TODO: Create desciption for the local functions
+/*
+ * Name: L_RefreshWelcome
+ *
+ * Description: This function display the welcome message and
+ *              it waits for a defined time.
+ *
+ * Input: None
+ *
+ * Output: None
+ */
 void L_RefreshWelcome(void)
 {
     LCD_SetCursor(L__POS_ROW_WELCOME, L__POS_COL_WELCOME);
@@ -60,19 +69,31 @@ void L_RefreshWelcome(void)
     LCD_Clear();
 }
 
+
+/*
+ * Name: L_RefreshBattery
+ *
+ * Description: This function display the battery related information:
+ *              - battery level in voltage
+ *              - status icon
+ *
+ * Input: None
+ *
+ * Output: None
+ */
 void L_RefreshBattery(void)
 {
-           float32  _bv                 = U__INIT_VALUE_FLOAT;
     static G_Flag_e L_OverChargeToggle  = Flag_SET;
+           float32  _BatteryVoltage     = U__INIT_VALUE_FLOAT;
 
 
-    _bv = MCH_ReadBatteryVoltage();
+    _BatteryVoltage = MCH_ReadBatteryVoltage();
 
-    /*******************************/
-    /* BATTERY LEVEL */
-    /*******************************/
+    //**************************************************************************
+    //****** BATTERY LEVEL
+    //**************************************************************************
     LCD_SetCursor(L__POS_ROW_BATT_LEVEL, L__POS_COL_BATT_LEVEL);
-    if (10.0f > _bv)
+    if (10.0f > _BatteryVoltage)
     {
         LCD_WriteChar(' ');
     }
@@ -82,19 +103,19 @@ void L_RefreshBattery(void)
         ;
     }
 
-    LCD_WriteInt((uint8)_bv);
+    LCD_WriteInt((uint8)_BatteryVoltage);
     LCD_WriteChar('.');
-    LCD_WriteInt((uint8)((_bv - ((uint8)_bv)) * 10.0f));
+    LCD_WriteInt((uint8)((_BatteryVoltage - ((uint8)_BatteryVoltage)) * 10.0f));
     LCD_WriteChar('V');
 
 
-    /*******************************/
-    /* BATTERY STATUS */
-    /*******************************/
+    //**************************************************************************
+    //****** BATTERY STATUS
+    //**************************************************************************
     LCD_SetCursor(L__POS_ROW_BATT_STATUS, L__POS_COL_BATT_STATUS);
     LCD_WriteCustomChar(L__CUSTOM_CHAR_POS_BATT_TOP);
 
-    if (L__BATTERY_LEVEL_OVERCHARGE <= _bv)
+    if (L__BATTERY_LEVEL_OVERCHARGE <= _BatteryVoltage)
     {
         if (Flag_SET == L_OverChargeToggle)
         {
@@ -113,42 +134,42 @@ void L_RefreshBattery(void)
             LCD_WriteCustomChar(L__CUSTOM_CHAR_POS_BATT_BOTTOM_CH_INV);
         }
     }
-    else if ((L__BATTERY_LEVEL_CHARGE <= _bv) && (_bv < L__BATTERY_LEVEL_OVERCHARGE))
+    else if ((L__BATTERY_LEVEL_CHARGE <= _BatteryVoltage) && (_BatteryVoltage < L__BATTERY_LEVEL_OVERCHARGE))
     {
         LCD_WriteCustomChar(L__CUSTOM_CHAR_POS_BATT_MIDDLE_CH);
         LCD_WriteCustomChar(L__CUSTOM_CHAR_POS_BATT_MIDDLE_CH);
         LCD_WriteCustomChar(L__CUSTOM_CHAR_POS_BATT_MIDDLE_CH);
         LCD_WriteCustomChar(L__CUSTOM_CHAR_POS_BATT_MIDDLE_CH);
     }
-    else if ((L__BATTERY_LEVEL_100 <= _bv) && (_bv < L__BATTERY_LEVEL_CHARGE))
+    else if ((L__BATTERY_LEVEL_100 <= _BatteryVoltage) && (_BatteryVoltage < L__BATTERY_LEVEL_CHARGE))
     {
         LCD_WriteCustomChar(L__CUSTOM_CHAR_POS_BATT_MIDDLE_1);
         LCD_WriteCustomChar(L__CUSTOM_CHAR_POS_BATT_MIDDLE_1);
         LCD_WriteCustomChar(L__CUSTOM_CHAR_POS_BATT_MIDDLE_1);
         LCD_WriteCustomChar(L__CUSTOM_CHAR_POS_BATT_MIDDLE_1);
     }
-    else if ((L__BATTERY_LEVEL_75 <= _bv) && (_bv < L__BATTERY_LEVEL_100))
+    else if ((L__BATTERY_LEVEL_75 <= _BatteryVoltage) && (_BatteryVoltage < L__BATTERY_LEVEL_100))
     {
         LCD_WriteCustomChar(L__CUSTOM_CHAR_POS_BATT_MIDDLE_0);
         LCD_WriteCustomChar(L__CUSTOM_CHAR_POS_BATT_MIDDLE_1);
         LCD_WriteCustomChar(L__CUSTOM_CHAR_POS_BATT_MIDDLE_1);
         LCD_WriteCustomChar(L__CUSTOM_CHAR_POS_BATT_MIDDLE_1);
     }
-    else if ((L__BATTERY_LEVEL_50 <= _bv) && (_bv < L__BATTERY_LEVEL_75))
+    else if ((L__BATTERY_LEVEL_50 <= _BatteryVoltage) && (_BatteryVoltage < L__BATTERY_LEVEL_75))
     {
         LCD_WriteCustomChar(L__CUSTOM_CHAR_POS_BATT_MIDDLE_0);
         LCD_WriteCustomChar(L__CUSTOM_CHAR_POS_BATT_MIDDLE_0);
         LCD_WriteCustomChar(L__CUSTOM_CHAR_POS_BATT_MIDDLE_1);
         LCD_WriteCustomChar(L__CUSTOM_CHAR_POS_BATT_MIDDLE_1);
     }
-    else if ((L__BATTERY_LEVEL_25 <= _bv) && (_bv < L__BATTERY_LEVEL_50))
+    else if ((L__BATTERY_LEVEL_25 <= _BatteryVoltage) && (_BatteryVoltage < L__BATTERY_LEVEL_50))
     {
         LCD_WriteCustomChar(L__CUSTOM_CHAR_POS_BATT_MIDDLE_0);
         LCD_WriteCustomChar(L__CUSTOM_CHAR_POS_BATT_MIDDLE_0);
         LCD_WriteCustomChar(L__CUSTOM_CHAR_POS_BATT_MIDDLE_0);
         LCD_WriteCustomChar(L__CUSTOM_CHAR_POS_BATT_MIDDLE_1);
     }
-    else if (L__BATTERY_LEVEL_25 > _bv)
+    else if (_BatteryVoltage < L__BATTERY_LEVEL_25)
     {
         LCD_WriteCustomChar(L__CUSTOM_CHAR_POS_BATT_MIDDLE_0);
         LCD_WriteCustomChar(L__CUSTOM_CHAR_POS_BATT_MIDDLE_0);
@@ -157,6 +178,18 @@ void L_RefreshBattery(void)
     }
 }
 
+
+/*
+ * Name: L_RefreshDHT22
+ *
+ * Description: This function display the DHT22 sensor related information:
+ *              - temperature in degC
+ *              - humidity
+ *
+ * Input: None
+ *
+ * Output: None
+ */
 void L_RefreshDHT22(void)
 {
     //**************************************************************************
@@ -235,8 +268,8 @@ void L_RefreshDHT22(void)
 /*
  * Name: LCM_Init
  *
- * Description: This is the initialization function that set the custom
- *              characters and init and clear the LCD.
+ * Description: This is the initialization function that sets the custom
+ *              characters and inits and clears the LCD.
  *
  * Input: None
  *
@@ -282,8 +315,6 @@ void LCM_Refresh(uint8 _Element)
         {
             L_RefreshBattery();
         }
-        break;
-
         break;
 
         case LCM__DHT22:

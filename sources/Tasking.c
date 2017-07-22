@@ -40,7 +40,8 @@ void Task_Init(void)
     MCH_InitTimer1();
     MCH_InitADC(); 
     MCH_InitWatchdog();
-//    MCH_InitSleepMode();
+    MCH_InitSleepMode();
+
     DHT22_Init();
     LCM_Init();
 
@@ -73,5 +74,8 @@ void Task_Main(void)
             }
 
         } // Task_1SEC
+
+        MCH__SLEEP();
+
     } // main end-less loop
 } // Task_Main
