@@ -10,7 +10,7 @@
 #define L__ADC_BATTERY_R2_KOHM       (10u)
 
 #define L__ADC_LSB_TO_VOLT      (L__ADC_REF_VOLT / L__ADC_RESOLUTION_BIT)
-#define L__ADC_VOLT_TO_BATTERY  (L__ADC_BATTERY_R2_KOHM * 1000.0f / (L__ADC_BATTERY_R1_KOHM * 1000.0f + L__ADC_BATTERY_R2_KOHM * 1000.0f))
+#define L__ADC_VOLT_TO_BATTERY  ((L__ADC_BATTERY_R2_KOHM * 1000.0f) / ((L__ADC_BATTERY_R1_KOHM * 1000.0f) + (L__ADC_BATTERY_R2_KOHM * 1000.0f)))
 
 
 //====== Private Signals =======================================================
@@ -242,7 +242,7 @@ uint16 MCH_ReadADC(uint8 _Channel)
     // Wait for the conversion to complete
     loop_until_bit_is_clear(ADCSRA, ADSC);
 
-    _Ret = (uint16)((ADCH << 8u) | ADCL);
+    _Ret = (uint16)(ADCL | (ADCH << 8u));
 
 
     return _Ret;
