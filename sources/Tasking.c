@@ -42,6 +42,7 @@ void Task_Init(void)
     MCH_InitWatchdog();
     MCH_InitSleepMode();
 
+    BVM_Init();
     DHT22_Init();
     LCM_Init();
 
@@ -65,8 +66,15 @@ void Task_Main(void)
 
             L_Task1SEC = Flag_CLEAR;
 
+            /***************************************/
+            /* Battery */
+            /***************************************/
+            BVM_Refresh();
             LCM_Refresh(LCM__BATTERY);
             
+            /***************************************/
+            /* DHT22 */
+            /***************************************/
             DHT22_Refresh();
             if (Flag_SET == XDHT22__DATA_UPDATED)
             {

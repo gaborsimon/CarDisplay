@@ -10,6 +10,7 @@
 #include "LCDCharacters_HD44780.h"
 #include "LCDDriver_HD44780.h"
 #include "MicroControllerHAL.h"
+#include "Sensor_BVM.h"
 #include "Sensor_DHT22.h"
 
 

@@ -3,14 +3,6 @@
 
 
 //====== Private Constants =====================================================
-#define L__ADC_REF_VOLT             (5.0f)
-#define L__ADC_RESOLUTION_BIT    (1024.0f)
-#define L__ADC_OFFSET_VOLT          (0.1f)
-#define L__ADC_BATTERY_R1_KOHM       (33u)
-#define L__ADC_BATTERY_R2_KOHM       (10u)
-
-#define L__ADC_LSB_TO_VOLT      (L__ADC_REF_VOLT / L__ADC_RESOLUTION_BIT)
-#define L__ADC_VOLT_TO_BATTERY  ((L__ADC_BATTERY_R2_KOHM * 1000.0f) / ((L__ADC_BATTERY_R1_KOHM * 1000.0f) + (L__ADC_BATTERY_R2_KOHM * 1000.0f)))
 
 
 //====== Private Signals =======================================================
@@ -243,32 +235,6 @@ uint16 MCH_ReadADC(uint8 _Channel)
     loop_until_bit_is_clear(ADCSRA, ADSC);
 
     _Ret = (uint16)(ADCL | (ADCH << 8u));
-
-
-    return _Ret;
-}
-
-
-/*
- * Name: MCH_ReadBatteryVoltage
- *
- * Description: This function measures the battery voltage via ADC.
- *              The result is in Voltage dimension compensated with ADC offset.
- *
- * Input:  ADC battery voltage channel
- *
- * Output: Measured battery voltage
- */
-float32 MCH_ReadBatteryVoltage(void)
-{
-    float32 _Ret = U__INIT_VALUE_FLOAT;
-
-
-    _Ret = (float32)MCH_ReadADC(MCH__ADC_CHANNEL_0);
-
-    _Ret *= L__ADC_LSB_TO_VOLT;
-    _Ret /= L__ADC_VOLT_TO_BATTERY;
-    _Ret += L__ADC_OFFSET_VOLT;
 
 
     return _Ret;

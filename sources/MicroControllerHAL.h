@@ -83,7 +83,6 @@ extern "C" {
     extern void     MCH_InitTimer1(void);
     extern void     MCH_InitADC(void);
     extern uint16   MCH_ReadADC(uint8 _Channel);
-    extern float32  MCH_ReadBatteryVoltage(void);
 
 #ifdef __cplusplus
 } // extern "C"

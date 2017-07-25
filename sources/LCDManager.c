@@ -11,23 +11,24 @@
 #define L__POS_COL_WELCOME          (1u)
 
 #define L__POS_ROW_BATT_LEVEL       (1u)
-#define L__POS_COL_BATT_LEVEL       (1u)
+#define L__POS_COL_BATT_LEVEL       (2u)
 
 #define L__POS_ROW_BATT_STATUS      (2u)
-#define L__POS_COL_BATT_STATUS      (1u)
+#define L__POS_COL_BATT_STATUS      (2u)
 
 #define L__POS_ROW_DHT22_TEMP       (1u)
-#define L__POS_COL_DHT22_TEMP      (11u)
+#define L__POS_COL_DHT22_TEMP      (10u)
 #define L__POS_ROW_DHT22_HUM        (2u)
-#define L__POS_COL_DHT22_HUM       (13u)
+#define L__POS_COL_DHT22_HUM       (12u)
 
 #define L__CUSTOM_CHAR_POS_BATT_TOP             (1u)
 #define L__CUSTOM_CHAR_POS_BATT_MIDDLE_0        (2u)
 #define L__CUSTOM_CHAR_POS_BATT_MIDDLE_1        (3u)
-#define L__CUSTOM_CHAR_POS_BATT_MIDDLE_CH       (4u)
-#define L__CUSTOM_CHAR_POS_BATT_MIDDLE_CH_INV   (5u)
-#define L__CUSTOM_CHAR_POS_BATT_BOTTOM_0        (6u)
-#define L__CUSTOM_CHAR_POS_BATT_BOTTOM_CH_INV   (7u)
+#define L__CUSTOM_CHAR_POS_BATT_MIDDLE_DCH      (4u)
+#define L__CUSTOM_CHAR_POS_BATT_MIDDLE_CH       (5u)
+#define L__CUSTOM_CHAR_POS_BATT_MIDDLE_CH_INV   (6u)
+#define L__CUSTOM_CHAR_POS_BATT_BOTTOM_0        (7u)
+#define L__CUSTOM_CHAR_POS_BATT_BOTTOM_CH_INV   (8u)
 
 #define L__BATTERY_LEVEL_OVERCHARGE (14.7f)
 #define L__BATTERY_LEVEL_CHARGE     (13.7f)
@@ -35,15 +36,16 @@
 #define L__BATTERY_LEVEL_75         (12.4f)
 #define L__BATTERY_LEVEL_50         (12.2f)
 #define L__BATTERY_LEVEL_25         (12.0f)
+#define L__BATTERY_LEVEL_0          (11.8f)
 
 
 //====== Private Signals =======================================================
 
 
 //====== Private Function Prototypes ===========================================
-void L_RefreshWelcome(void);
-void L_RefreshBattery(void);
-void L_RefreshDHT22(void);
+static void L_RefreshWelcome(void);
+static void L_RefreshBattery(void);
+static void L_RefreshDHT22(void);
 
 
 //====== Private Functions =====================================================
@@ -57,7 +59,7 @@ void L_RefreshDHT22(void);
  *
  * Output: None
  */
-void L_RefreshWelcome(void)
+static void L_RefreshWelcome(void)
 {
     LCD_SetCursor(L__POS_ROW_WELCOME, L__POS_COL_WELCOME);
     LCD_WriteString(L__WELCOME_MESSAGE_ROW_1); 
@@ -81,100 +83,107 @@ void L_RefreshWelcome(void)
  *
  * Output: None
  */
-void L_RefreshBattery(void)
+static void L_RefreshBattery(void)
 {
     static G_Flag_e L_OverChargeToggle  = Flag_SET;
-           float32  _BatteryVoltage     = U__INIT_VALUE_FLOAT;
 
 
-    _BatteryVoltage = MCH_ReadBatteryVoltage();
-
-    //**************************************************************************
-    //****** BATTERY LEVEL
-    //**************************************************************************
-    LCD_SetCursor(L__POS_ROW_BATT_LEVEL, L__POS_COL_BATT_LEVEL);
-    if (10.0f > _BatteryVoltage)
+    if (Signal_RELIABLE == XBVM__DATA_QUALIFIER)
     {
-        LCD_WriteChar(' ');
-    }
-    else
-    {
-        // Nothing to do
-        ;
-    }
-
-    LCD_WriteInt((uint8)_BatteryVoltage);
-    LCD_WriteChar('.');
-    LCD_WriteInt((uint8)((_BatteryVoltage - ((uint8)_BatteryVoltage)) * 10.0f));
-    LCD_WriteChar('V');
-
-
-    //**************************************************************************
-    //****** BATTERY STATUS
-    //**************************************************************************
-    LCD_SetCursor(L__POS_ROW_BATT_STATUS, L__POS_COL_BATT_STATUS);
-    LCD_WriteCustomChar(L__CUSTOM_CHAR_POS_BATT_TOP);
-
-    if (L__BATTERY_LEVEL_OVERCHARGE <= _BatteryVoltage)
-    {
-        if (Flag_SET == L_OverChargeToggle)
+        //**************************************************************************
+        //****** BATTERY LEVEL
+        //**************************************************************************
+        LCD_SetCursor(L__POS_ROW_BATT_LEVEL, L__POS_COL_BATT_LEVEL);
+        if (10.0f > XBVM__BATTERY_VOLTAGE)
         {
-            L_OverChargeToggle = Flag_CLEAR;
-            LCD_WriteCustomChar(L__CUSTOM_CHAR_POS_BATT_MIDDLE_CH);
-            LCD_WriteCustomChar(L__CUSTOM_CHAR_POS_BATT_MIDDLE_CH);
-            LCD_WriteCustomChar(L__CUSTOM_CHAR_POS_BATT_MIDDLE_CH);
-            LCD_WriteCustomChar(L__CUSTOM_CHAR_POS_BATT_MIDDLE_CH);
+            LCD_WriteChar(' ');
         }
         else
         {
-            L_OverChargeToggle = Flag_SET; 
-            LCD_WriteCustomChar(L__CUSTOM_CHAR_POS_BATT_MIDDLE_CH_INV);
-            LCD_WriteCustomChar(L__CUSTOM_CHAR_POS_BATT_MIDDLE_CH_INV);
-            LCD_WriteCustomChar(L__CUSTOM_CHAR_POS_BATT_MIDDLE_CH_INV);
-            LCD_WriteCustomChar(L__CUSTOM_CHAR_POS_BATT_BOTTOM_CH_INV);
+            // Nothing to do
+            ;
         }
-    }
-    else if ((L__BATTERY_LEVEL_CHARGE <= _BatteryVoltage) && (_BatteryVoltage < L__BATTERY_LEVEL_OVERCHARGE))
-    {
-        LCD_WriteCustomChar(L__CUSTOM_CHAR_POS_BATT_MIDDLE_CH);
-        LCD_WriteCustomChar(L__CUSTOM_CHAR_POS_BATT_MIDDLE_CH);
-        LCD_WriteCustomChar(L__CUSTOM_CHAR_POS_BATT_MIDDLE_CH);
-        LCD_WriteCustomChar(L__CUSTOM_CHAR_POS_BATT_MIDDLE_CH);
-    }
-    else if ((L__BATTERY_LEVEL_100 <= _BatteryVoltage) && (_BatteryVoltage < L__BATTERY_LEVEL_CHARGE))
-    {
-        LCD_WriteCustomChar(L__CUSTOM_CHAR_POS_BATT_MIDDLE_1);
-        LCD_WriteCustomChar(L__CUSTOM_CHAR_POS_BATT_MIDDLE_1);
-        LCD_WriteCustomChar(L__CUSTOM_CHAR_POS_BATT_MIDDLE_1);
-        LCD_WriteCustomChar(L__CUSTOM_CHAR_POS_BATT_MIDDLE_1);
-    }
-    else if ((L__BATTERY_LEVEL_75 <= _BatteryVoltage) && (_BatteryVoltage < L__BATTERY_LEVEL_100))
-    {
-        LCD_WriteCustomChar(L__CUSTOM_CHAR_POS_BATT_MIDDLE_0);
-        LCD_WriteCustomChar(L__CUSTOM_CHAR_POS_BATT_MIDDLE_1);
-        LCD_WriteCustomChar(L__CUSTOM_CHAR_POS_BATT_MIDDLE_1);
-        LCD_WriteCustomChar(L__CUSTOM_CHAR_POS_BATT_MIDDLE_1);
-    }
-    else if ((L__BATTERY_LEVEL_50 <= _BatteryVoltage) && (_BatteryVoltage < L__BATTERY_LEVEL_75))
-    {
-        LCD_WriteCustomChar(L__CUSTOM_CHAR_POS_BATT_MIDDLE_0);
-        LCD_WriteCustomChar(L__CUSTOM_CHAR_POS_BATT_MIDDLE_0);
-        LCD_WriteCustomChar(L__CUSTOM_CHAR_POS_BATT_MIDDLE_1);
-        LCD_WriteCustomChar(L__CUSTOM_CHAR_POS_BATT_MIDDLE_1);
-    }
-    else if ((L__BATTERY_LEVEL_25 <= _BatteryVoltage) && (_BatteryVoltage < L__BATTERY_LEVEL_50))
-    {
-        LCD_WriteCustomChar(L__CUSTOM_CHAR_POS_BATT_MIDDLE_0);
-        LCD_WriteCustomChar(L__CUSTOM_CHAR_POS_BATT_MIDDLE_0);
-        LCD_WriteCustomChar(L__CUSTOM_CHAR_POS_BATT_MIDDLE_0);
-        LCD_WriteCustomChar(L__CUSTOM_CHAR_POS_BATT_MIDDLE_1);
-    }
-    else if (_BatteryVoltage < L__BATTERY_LEVEL_25)
-    {
-        LCD_WriteCustomChar(L__CUSTOM_CHAR_POS_BATT_MIDDLE_0);
-        LCD_WriteCustomChar(L__CUSTOM_CHAR_POS_BATT_MIDDLE_0);
-        LCD_WriteCustomChar(L__CUSTOM_CHAR_POS_BATT_MIDDLE_0);
-        LCD_WriteCustomChar(L__CUSTOM_CHAR_POS_BATT_BOTTOM_0);
+
+        LCD_WriteInt((uint8)XBVM__BATTERY_VOLTAGE);
+        LCD_WriteChar('.');
+        LCD_WriteInt((uint8)((XBVM__BATTERY_VOLTAGE - ((uint8)XBVM__BATTERY_VOLTAGE)) * 10.0f));
+        LCD_WriteChar('V');
+
+
+        //**************************************************************************
+        //****** BATTERY STATUS
+        //**************************************************************************
+        LCD_SetCursor(L__POS_ROW_BATT_STATUS, L__POS_COL_BATT_STATUS);
+        LCD_WriteCustomChar(L__CUSTOM_CHAR_POS_BATT_TOP);
+
+        if (L__BATTERY_LEVEL_OVERCHARGE <= XBVM__BATTERY_VOLTAGE)
+        {
+            if (Flag_SET == L_OverChargeToggle)
+            {
+                L_OverChargeToggle = Flag_CLEAR;
+                LCD_WriteCustomChar(L__CUSTOM_CHAR_POS_BATT_MIDDLE_CH);
+                LCD_WriteCustomChar(L__CUSTOM_CHAR_POS_BATT_MIDDLE_CH);
+                LCD_WriteCustomChar(L__CUSTOM_CHAR_POS_BATT_MIDDLE_CH);
+                LCD_WriteCustomChar(L__CUSTOM_CHAR_POS_BATT_MIDDLE_CH);
+            }
+            else
+            {
+                L_OverChargeToggle = Flag_SET; 
+                LCD_WriteCustomChar(L__CUSTOM_CHAR_POS_BATT_MIDDLE_CH_INV);
+                LCD_WriteCustomChar(L__CUSTOM_CHAR_POS_BATT_MIDDLE_CH_INV);
+                LCD_WriteCustomChar(L__CUSTOM_CHAR_POS_BATT_MIDDLE_CH_INV);
+                LCD_WriteCustomChar(L__CUSTOM_CHAR_POS_BATT_BOTTOM_CH_INV);
+            }
+        }
+        else if ((L__BATTERY_LEVEL_CHARGE <= XBVM__BATTERY_VOLTAGE) && (XBVM__BATTERY_VOLTAGE < L__BATTERY_LEVEL_OVERCHARGE))
+        {
+            LCD_WriteCustomChar(L__CUSTOM_CHAR_POS_BATT_MIDDLE_CH);
+            LCD_WriteCustomChar(L__CUSTOM_CHAR_POS_BATT_MIDDLE_CH);
+            LCD_WriteCustomChar(L__CUSTOM_CHAR_POS_BATT_MIDDLE_CH);
+            LCD_WriteCustomChar(L__CUSTOM_CHAR_POS_BATT_MIDDLE_CH);
+        }
+        else if ((L__BATTERY_LEVEL_100 <= XBVM__BATTERY_VOLTAGE) && (XBVM__BATTERY_VOLTAGE < L__BATTERY_LEVEL_CHARGE))
+        {
+            LCD_WriteCustomChar(L__CUSTOM_CHAR_POS_BATT_MIDDLE_1);
+            LCD_WriteCustomChar(L__CUSTOM_CHAR_POS_BATT_MIDDLE_1);
+            LCD_WriteCustomChar(L__CUSTOM_CHAR_POS_BATT_MIDDLE_1);
+            LCD_WriteCustomChar(L__CUSTOM_CHAR_POS_BATT_MIDDLE_1);
+        }
+        else if ((L__BATTERY_LEVEL_75 <= XBVM__BATTERY_VOLTAGE) && (XBVM__BATTERY_VOLTAGE < L__BATTERY_LEVEL_100))
+        {
+            LCD_WriteCustomChar(L__CUSTOM_CHAR_POS_BATT_MIDDLE_DCH);
+            LCD_WriteCustomChar(L__CUSTOM_CHAR_POS_BATT_MIDDLE_1);
+            LCD_WriteCustomChar(L__CUSTOM_CHAR_POS_BATT_MIDDLE_1);
+            LCD_WriteCustomChar(L__CUSTOM_CHAR_POS_BATT_MIDDLE_1);
+        }
+        else if ((L__BATTERY_LEVEL_50 <= XBVM__BATTERY_VOLTAGE) && (XBVM__BATTERY_VOLTAGE < L__BATTERY_LEVEL_75))
+        {
+            LCD_WriteCustomChar(L__CUSTOM_CHAR_POS_BATT_MIDDLE_0);
+            LCD_WriteCustomChar(L__CUSTOM_CHAR_POS_BATT_MIDDLE_DCH);
+            LCD_WriteCustomChar(L__CUSTOM_CHAR_POS_BATT_MIDDLE_1);
+            LCD_WriteCustomChar(L__CUSTOM_CHAR_POS_BATT_MIDDLE_1);
+        }
+        else if ((L__BATTERY_LEVEL_25 <= XBVM__BATTERY_VOLTAGE) && (XBVM__BATTERY_VOLTAGE < L__BATTERY_LEVEL_50))
+        {
+            LCD_WriteCustomChar(L__CUSTOM_CHAR_POS_BATT_MIDDLE_0);
+            LCD_WriteCustomChar(L__CUSTOM_CHAR_POS_BATT_MIDDLE_0);
+            LCD_WriteCustomChar(L__CUSTOM_CHAR_POS_BATT_MIDDLE_DCH);
+            LCD_WriteCustomChar(L__CUSTOM_CHAR_POS_BATT_MIDDLE_1);
+        }
+        else if ((L__BATTERY_LEVEL_0 <= XBVM__BATTERY_VOLTAGE) && (XBVM__BATTERY_VOLTAGE < L__BATTERY_LEVEL_25))
+        {
+            LCD_WriteCustomChar(L__CUSTOM_CHAR_POS_BATT_MIDDLE_0);
+            LCD_WriteCustomChar(L__CUSTOM_CHAR_POS_BATT_MIDDLE_0);
+            LCD_WriteCustomChar(L__CUSTOM_CHAR_POS_BATT_MIDDLE_0);
+            LCD_WriteCustomChar(L__CUSTOM_CHAR_POS_BATT_MIDDLE_DCH);
+        }
+        else if (XBVM__BATTERY_VOLTAGE < L__BATTERY_LEVEL_0)
+        {
+            LCD_WriteCustomChar(L__CUSTOM_CHAR_POS_BATT_MIDDLE_0);
+            LCD_WriteCustomChar(L__CUSTOM_CHAR_POS_BATT_MIDDLE_0);
+            LCD_WriteCustomChar(L__CUSTOM_CHAR_POS_BATT_MIDDLE_0);
+            LCD_WriteCustomChar(L__CUSTOM_CHAR_POS_BATT_BOTTOM_0);
+        }
     }
 }
 
@@ -190,7 +199,7 @@ void L_RefreshBattery(void)
  *
  * Output: None
  */
-void L_RefreshDHT22(void)
+static void L_RefreshDHT22(void)
 {
     //**************************************************************************
     //****** TEMPERATURE - DHT22
@@ -285,6 +294,7 @@ void LCM_Init(void)
     LCD_StoreCustomChar(L__CUSTOM_CHAR_POS_BATT_MIDDLE_0,       LCD_CharBatteryMiddle0);
     LCD_StoreCustomChar(L__CUSTOM_CHAR_POS_BATT_MIDDLE_1,       LCD_CharBatteryMiddle1);
     LCD_StoreCustomChar(L__CUSTOM_CHAR_POS_BATT_MIDDLE_CH,      LCD_CharBatteryMiddleCharge);
+    LCD_StoreCustomChar(L__CUSTOM_CHAR_POS_BATT_MIDDLE_DCH,     LCD_CharBatteryMiddleDisCharge);
     LCD_StoreCustomChar(L__CUSTOM_CHAR_POS_BATT_MIDDLE_CH_INV,  LCD_CharBatteryMiddleChargeInv);
     LCD_StoreCustomChar(L__CUSTOM_CHAR_POS_BATT_BOTTOM_0,       LCD_CharBatteryBottom0);
     LCD_StoreCustomChar(L__CUSTOM_CHAR_POS_BATT_BOTTOM_CH_INV,  LCD_CharBatteryBottomChargeInv);

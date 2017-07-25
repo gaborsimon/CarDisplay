@@ -50,6 +50,18 @@ static const uint8 LCD_CharBatteryMiddle1[LCD__CHARACTER_ROW_SIZE] =
     0b11111
 };
 
+static const uint8 LCD_CharBatteryMiddleDisCharge[LCD__CHARACTER_ROW_SIZE] =
+{
+    0b11111,
+	0b00011,
+	0b00011,
+	0b00111,
+	0b00111,
+	0b01111,
+	0b01111,
+	0b11111
+};
+        
 static const uint8 LCD_CharBatteryMiddleCharge[LCD__CHARACTER_ROW_SIZE] =
 {
     0b11111,

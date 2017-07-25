@@ -11,6 +11,7 @@
 #include "LCDDriver_HD44780.h"
 #include "LCDManager.h"
 #include "MicroControllerHAL.h"
+#include "Sensor_BVM.h"
 #include "Sensor_DHT22.h"
 
 
