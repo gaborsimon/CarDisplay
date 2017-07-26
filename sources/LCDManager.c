@@ -185,6 +185,17 @@ static void L_RefreshBattery(void)
             LCD_WriteCustomChar(L__CUSTOM_CHAR_POS_BATT_BOTTOM_0);
         }
     }
+    else
+    {
+        LCD_SetCursor(L__POS_ROW_BATT_LEVEL, L__POS_COL_BATT_LEVEL);
+        LCD_WriteString(" -- V");
+        LCD_SetCursor(L__POS_ROW_BATT_STATUS, L__POS_COL_BATT_STATUS);
+        LCD_WriteCustomChar(L__CUSTOM_CHAR_POS_BATT_TOP);
+        LCD_WriteCustomChar(L__CUSTOM_CHAR_POS_BATT_MIDDLE_0);
+        LCD_WriteCustomChar(L__CUSTOM_CHAR_POS_BATT_MIDDLE_0);
+        LCD_WriteCustomChar(L__CUSTOM_CHAR_POS_BATT_MIDDLE_0);
+        LCD_WriteCustomChar(L__CUSTOM_CHAR_POS_BATT_BOTTOM_0);
+    }
 }
 
 
