@@ -140,7 +140,7 @@ void MCH_InitTimer1(void)
     // Input Capture Edge Select: Falling (negative) edge
     U__BIT_CLR(TCCR1B, ICES1);
     
-    // Clock Select: CLK / 256 = 46.875kHz = 21.33us
+    // Clock Select: CLK / 256 = 62.5kHz = 16us
     U__BIT_SET(TCCR1B, CS12);
     U__BIT_CLR(TCCR1B, CS11);
     U__BIT_CLR(TCCR1B, CS10);
@@ -197,7 +197,7 @@ void MCH_InitADC(void)
     // ADC Interrupt: Disabled
     U__BIT_CLR(ADCSRA, ADIE);
     
-    // ADC Prescaler Select: CLK / 128 = 93.75kHz
+    // ADC Prescaler Select: CLK / 128 = 125kHz
     U__BIT_SET(ADCSRA, ADPS2);
     U__BIT_SET(ADCSRA, ADPS1);
     U__BIT_SET(ADCSRA, ADPS0);

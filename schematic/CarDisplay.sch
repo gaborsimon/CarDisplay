@@ -309,11 +309,6 @@ Source: tuxgr_20x2.pdf</description>
 <packages>
 </packages>
 <symbols>
-<symbol name="GND">
-<wire x1="-1.905" y1="0" x2="1.905" y2="0" width="0.254" layer="94"/>
-<text x="-2.54" y="-2.54" size="1.778" layer="96">&gt;VALUE</text>
-<pin name="GND" x="0" y="2.54" visible="off" length="short" direction="sup" rot="R270"/>
-</symbol>
 <symbol name="+5V">
 <wire x1="1.27" y1="-1.905" x2="0" y2="0" width="0.254" layer="94"/>
 <wire x1="0" y1="0" x2="-1.27" y2="-1.905" width="0.254" layer="94"/>
@@ -322,19 +317,6 @@ Source: tuxgr_20x2.pdf</description>
 </symbol>
 </symbols>
 <devicesets>
-<deviceset name="GND" prefix="GND">
-<description>&lt;b&gt;SUPPLY SYMBOL&lt;/b&gt;</description>
-<gates>
-<gate name="1" symbol="GND" x="0" y="0"/>
-</gates>
-<devices>
-<device name="">
-<technologies>
-<technology name=""/>
-</technologies>
-</device>
-</devices>
-</deviceset>
 <deviceset name="+5V" prefix="P+">
 <description>&lt;b&gt;SUPPLY SYMBOL&lt;/b&gt;</description>
 <gates>
@@ -13193,7 +13175,6 @@ Comments, suggestions and bug reports please send to: &lt;b&gt;&lt;a href="mailt
 <part name="P+5" library="supply1" deviceset="+5V" device=""/>
 <part name="R6" library="rcl" deviceset="R-EU_" device="0204/7" value="10k"/>
 <part name="DHT22" library="con-lstb" deviceset="MA04-1" device=""/>
-<part name="GND8" library="supply1" deviceset="GND" device=""/>
 <part name="C4" library="rcl" deviceset="CPOL-EU" device="E5-8.5" value="10u"/>
 <part name="R1" library="resistor" deviceset="R-TRIMM" device="3202" value="10k"/>
 <part name="P+2" library="supply1" deviceset="+5V" device=""/>
@@ -13240,7 +13221,6 @@ Vin_max = 21.5V</text>
 </instance>
 <instance part="R6" gate="G$1" x="66.04" y="127" rot="R270"/>
 <instance part="DHT22" gate="1" x="170.18" y="38.1" rot="MR90"/>
-<instance part="GND8" gate="1" x="180.34" y="48.26"/>
 <instance part="C4" gate="G$1" x="55.88" y="129.54" smashed="yes">
 <attribute name="VALUE" x="51.2826" y="130.937" size="1.778" layer="96" rot="R270"/>
 </instance>
@@ -13282,16 +13262,6 @@ Vin_max = 21.5V</text>
 <wire x1="165.1" y1="60.96" x2="165.1" y2="45.72" width="0.1524" layer="91"/>
 <label x="165.1" y="45.72" size="1.778" layer="95" rot="R90"/>
 <pinref part="P+2" gate="1" pin="+5V"/>
-</segment>
-</net>
-<net name="GND" class="0">
-<segment>
-<pinref part="DHT22" gate="1" pin="4"/>
-<wire x1="172.72" y1="45.72" x2="172.72" y2="55.88" width="0.1524" layer="91"/>
-<wire x1="172.72" y1="55.88" x2="180.34" y2="55.88" width="0.1524" layer="91"/>
-<pinref part="GND8" gate="1" pin="GND"/>
-<wire x1="180.34" y1="55.88" x2="180.34" y2="50.8" width="0.1524" layer="91"/>
-<label x="172.72" y="45.72" size="1.778" layer="95" rot="R90"/>
 </segment>
 </net>
 <net name="N$4" class="0">
@@ -13414,10 +13384,14 @@ Vin_max = 21.5V</text>
 <wire x1="236.22" y1="127" x2="236.22" y2="124.46" width="0.1524" layer="91"/>
 <wire x1="236.22" y1="124.46" x2="228.6" y2="124.46" width="0.1524" layer="91"/>
 <wire x1="228.6" y1="124.46" x2="228.6" y2="83.82" width="0.1524" layer="91"/>
-<wire x1="228.6" y1="83.82" x2="149.86" y2="83.82" width="0.1524" layer="91"/>
+<wire x1="228.6" y1="83.82" x2="172.72" y2="83.82" width="0.1524" layer="91"/>
+<wire x1="172.72" y1="83.82" x2="149.86" y2="83.82" width="0.1524" layer="91"/>
 <wire x1="190.5" y1="124.46" x2="228.6" y2="124.46" width="0.1524" layer="91"/>
-<label x="198.12" y="129.54" size="1.778" layer="95" rot="R90"/>
+<label x="193.04" y="127" size="1.778" layer="95" rot="R90"/>
 <pinref part="M1" gate="G$1" pin="GND.1"/>
+<pinref part="DHT22" gate="1" pin="4"/>
+<wire x1="172.72" y1="45.72" x2="172.72" y2="83.82" width="0.1524" layer="91"/>
+<junction x="172.72" y="83.82"/>
 </segment>
 </net>
 <net name="N$8" class="0">
