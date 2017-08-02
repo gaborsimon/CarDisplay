@@ -36,11 +36,11 @@ The unit displays a message for 3 seconds after switching on:
 |      v1.0      |
 ------------------
 ```
-After the welcome message first the following information will be displayed:
-* car battery voltage level in V dimension with one decimal precision,
+After the welcome message the following information will be displayed:
+* car battery voltage level in voltage dimension with one decimal precision,
 * car battery voltage status with an informated icon,
-* interior temperature in °C dimension with one decimal precision,
-* interior humidity in % dimension without decimal precision.
+* interior temperature in degree Celcius dimension with one decimal precision,
+* interior humidity in percent dimension without decimal precision.
 For example:
 ```
 ------------------
@@ -48,7 +48,11 @@ For example:
 | |||||      62% |
 ------------------
 ```
-The used voltage levels are the following:
+Measurement period time:
+* battery voltage level = 1 second
+* temperature and humidity = 5 seconds
+
+The battery status voltage levels are the following:
 
 Voltage | Status
 ------- | ------
@@ -63,6 +67,9 @@ below 11.8V | 0% capacity (battery is dead)
 
 ## Additional Information
 
+### Version
+1.0 - Initial version with full functionality
+
 ### Built with
 Program | Version
 ------- | -------
@@ -70,8 +77,16 @@ avr-gcc | 4.9.2
 avrdude | 6.3
 eagle | 7.5.0
 
-### Version
-1.0 - Initial version with full functionality
+### AVR Memory Usage
+```
+Device: atmega328p
+
+Program:    4514 bytes (13.8% Full)
+(.text + .data + .bootloader)
+
+Data:        134 bytes (6.5% Full)
+(.data + .bss + .noinit)
+```
 
 ### Author
 Gabor Simon | *M.Sc. Electrical Engineer* | *Budapest University of Technology and Economics (BUTE)*
