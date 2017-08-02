@@ -75,7 +75,7 @@ Program | Version
 ------- | -------
 avr-gcc | 4.9.2
 avrdude | 6.3
-eagle | 7.5.0
+eagle | 6.6.0 Light
 
 ### AVR Memory Usage
 ```
