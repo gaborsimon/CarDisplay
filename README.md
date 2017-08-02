@@ -77,4 +77,4 @@ eagle | 7.5.0
 Gabor Simon | *M.Sc. Electrical Engineer* | *Budapest University of Technology and Economics (BUTE)*
 
 ### License
-This project is licensed under [the MIT License](https://opensource.org/licenses/MIT).
+This project is licensed under the [MIT License](https://opensource.org/licenses/MIT).
