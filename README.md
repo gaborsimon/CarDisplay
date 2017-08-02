@@ -74,9 +74,7 @@ eagle | 7.5.0
 1.0 - Initial version with full functionality
 
 ### Author
-Gabor Simon
-*M.Sc. Electrical Engineer*
-*Budapest University of Technology and Economics (BUTE)*
+Gabor Simon | *M.Sc. Electrical Engineer* | *Budapest University of Technology and Economics (BUTE)*
 
 ### License
 This project is licensed under [the MIT License](https://opensource.org/licenses/MIT).
